@@ -7,11 +7,13 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.Ordered;
 import org.springframework.core.PriorityOrdered;
+import org.springframework.stereotype.Component;
 
 /**
  * @author hailang.zhang
  * @since 2023-07-05
  */
+@Component
 public class AsyncTaskExecutionListener implements ApplicationContextAware, PriorityOrdered, ApplicationListener<ContextRefreshedEvent> {
 
     private ApplicationContext context;
@@ -23,7 +25,9 @@ public class AsyncTaskExecutionListener implements ApplicationContextAware, Prio
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-
+        if (context.equals(event.getApplicationContext())) {
+            AsyncTaskExecutor.ensureAsyncTasksFinish();
+        }
     }
 
     @Override

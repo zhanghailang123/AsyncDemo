@@ -1,5 +1,6 @@
 package com.example.asyncdemo.bean;
 
+import com.example.asyncdemo.process.AsyncTaskExecutor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.TimeUnit;
@@ -12,8 +13,14 @@ import java.util.concurrent.TimeUnit;
 public class HaiLangBean {
 
     public void init() throws InterruptedException {
-        log.info("hailang Bean start, : {}", Thread.currentThread().getName());
-        TimeUnit.SECONDS.sleep(5);
-        log.info("hailang Bean stop, : {}", Thread.currentThread().getName());
+        AsyncTaskExecutor.submitTask(() -> {
+            log.info("hailang Bean start, : {}", Thread.currentThread().getName());
+            try {
+                TimeUnit.SECONDS.sleep(5);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            log.info("hailang Bean stop, : {}", Thread.currentThread().getName());
+        });
     }
 }
